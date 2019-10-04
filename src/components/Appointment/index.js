@@ -26,11 +26,7 @@ export default function Appointment(props) {
     Promise.resolve(props.cancelInterview(props.id))
       .then(() => transition(EMPTY)).catch((err) => { console.log(err); })
   }
-  //confirm
-  const confirmDelete = () => {
-    transition(DELETING, true)
-    
-  }
+ 
 
 //save appmt
   function save(name, interviewer) {
