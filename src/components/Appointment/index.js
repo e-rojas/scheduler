@@ -9,6 +9,7 @@ import Confirm from "./Confirm";
 
 import useVisualMode from "hooks/useVisualMode";
 
+
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
@@ -16,15 +17,19 @@ export default function Appointment(props) {
   const SAVING = "SAVING";
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM"
-
+  const EDIT = "EDIT";
+  const ERROR_SAVE = 'ERROR_SAVE';
+  const ERROR_DELETE = 'ERROR_DELETE'
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+  
   //delete appmt
   function deleteAppointment() {
     transition(DELETING);
     Promise.resolve(props.cancelInterview(props.id))
       .then(() => transition(EMPTY)).catch((err) => { console.log(err); })
+      .catch(err => transition(ERROR_DELETE, true))
   }
  
 
@@ -37,10 +42,12 @@ export default function Appointment(props) {
     };
     Promise.resolve(props.bookInterview(props.id, interview))
       .then(() => transition(SHOW))
-      .catch(err => console.log(err));
+      .catch(error => transition(ERROR_SAVE, true));
+   
    /*  props.bookInterview(props.id, interview); // wasnt showing the loading transition!!
     transition(SHOW); */
   }
+ 
 
   return (
     <article className="appointment">
@@ -52,6 +59,7 @@ export default function Appointment(props) {
           interviewer={props.interview.interviewer}
           onDelete={()=>transition(CONFIRM)}
           id={props.id}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === SAVING && (
@@ -75,6 +83,16 @@ export default function Appointment(props) {
           onCancel={() => back()}
         />
       )}
+      {mode === EDIT && (
+         <Form 
+           name={props.interview.student}
+           interviewer={props.interview.interviewer.id}
+           interviewers={props.interviewers}
+           onCancel = {() => back()}
+           onSave = {save}
+         />
+       )}
+      
     </article>
   );
 }
