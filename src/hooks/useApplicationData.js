@@ -11,7 +11,25 @@ export function reducer(state, action) {
     case SET_APPLICATION_DATA:
      return  { ...state, days:action.days, appointments:action.appointments, interviewers:action.interviewers };
       case SET_INTERVIEW: {
-          return{...state, appointments:action.appointments}
+          console.log('test', state.days);
+          const dayOfAppmt = state.days.find(d => d.appointments.includes(action.id));
+         
+          const countSpotsOfDay = (day) => {
+              let numberOfSpots = 0;
+              day.appointments.forEach(appt => {
+                  if (!action.appointments[appt].interview) {
+                      numberOfSpots += 1;
+                  }
+              })
+              return numberOfSpots
+          }
+          const day = { ...dayOfAppmt, spots: countSpotsOfDay(dayOfAppmt) };
+          const index = state.days.indexOf(dayOfAppmt);
+          console.log(index);
+          const days = [...state.days];
+          days[index] = day;
+
+          return{...state, appointments:action.appointments,days}
     }
     default:
       throw new Error(
@@ -29,7 +47,8 @@ export default function useApplicationData() {
         interviewers: {}
     })
  
-
+//find where the data is being stored for the spots left
+//to change that data state when adding a new appnt or deleting in the event.
     const setDay = day => dispatch({ type:SET_DAY, day });
 
 useEffect(() => {
@@ -68,7 +87,9 @@ useEffect(() => {
     };
     dispatch({
         type: SET_INTERVIEW,
-        appointments
+        appointments,
+        id
+
     });
  
     console.log(id, interview);
