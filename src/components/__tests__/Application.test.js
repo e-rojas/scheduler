@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import React from "react";
-import { render, cleanup, waitForElement, prettyDOM, fireEvent,getByTestId, getByText,queryByText, getByAltText,queryByAltText, getAllByTestId, getByPlaceholderText } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent,getByTestId, getByText,queryByText, getByAltText,queryByAltText, getAllByTestId, getByPlaceholderText } from "@testing-library/react";
 import Application from "components/Application";
 
 
@@ -113,11 +113,10 @@ describe("Application", () => {
     await waitForElement(() => getByText(appointment, "Error"))
     
     expect(getByText(appointment, "Unable to save")).toBeInTheDocument()
-    console.log('appointment 1',prettyDOM(appointment))
-    //console.log('close', getByText(appointment, "Cancel"));
+   
+    
     
     fireEvent.click(getByAltText(appointment, "Close"))
-    console.log('appointment', prettyDOM(appointment))
     
     expect(getByText(appointment, "Cancel")).toBeInTheDocument()
   
