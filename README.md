@@ -41,3 +41,4 @@ npm test
 ```sh
 npm run storybook
 ```
+### ssh-keygen -m PEM -t rsa -C "your_email@example.com"
